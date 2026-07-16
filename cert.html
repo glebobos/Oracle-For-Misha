@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+    <meta charset="UTF-8">
+    <title>Падарачны Сертыфікат — Oracle for Misha</title>
+    <style>
+        @page { size: A4 landscape; margin: 0; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { height: 100%; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            width: 297mm;
+            height: 210mm;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .certificate {
+            background: #161b22;
+            border: 3px solid #238636;
+            border-radius: 12px;
+            padding: 16px 36px 12px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(35,134,54,0.25);
+        }
+
+        .corner {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-color: #238636;
+            border-style: solid;
+            opacity: 0.6;
+        }
+        .corner.tl { top: 10px; left: 10px; border-width: 2px 0 0 2px; border-radius: 5px 0 0 0; }
+        .corner.tr { top: 10px; right: 10px; border-width: 2px 2px 0 0; border-radius: 0 5px 0 0; }
+        .corner.bl { bottom: 10px; left: 10px; border-width: 0 0 2px 2px; border-radius: 0 0 0 5px; }
+        .corner.br { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; border-radius: 0 0 5px 0; }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, #30363d 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .inner {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* TOP */
+        .badge {
+            display: inline-block;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #58a6ff;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #238636;
+            letter-spacing: 0.04em;
+            text-shadow: 0 0 24px rgba(35,134,54,0.5);
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: #8b949e;
+            letter-spacing: 0.08em;
+        }
+
+        /* DIVIDER */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, #238636, transparent); }
+        .divider-icon { color: #238636; font-size: 12px; }
+
+        /* RECIPIENT */
+        .recipient-label {
+            font-size: 10px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1px;
+        }
+        .recipient-name {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 50%, #ff7b72 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        /* TEXT */
+        .text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #8b949e;
+        }
+
+        /* REPO + QR ROW */
+        .repo-qr-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .repo-block {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 12px;
+        }
+        .repo-icon { color: #8b949e; }
+        .repo-url { color: #ff7b72; }
+
+        .qr-wrapper {
+            background: #fff;
+            border-radius: 6px;
+            padding: 4px;
+            flex-shrink: 0;
+            line-height: 0;
+        }
+        .qr-wrapper img {
+            display: block;
+            width: 86px;
+            height: 86px;
+        }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+        }
+        .stat {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 7px 16px;
+            min-width: 86px;
+        }
+        .stat-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: #58a6ff;
+            display: block;
+        }
+        .stat-label {
+            font-size: 9px;
+            color: #484f58;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 1px;
+        }
+
+        /* INSTRUCTION */
+        .instruction {
+            font-size: 12px;
+            color: #f0883e;
+            background: rgba(240,136,62,0.08);
+            border: 1px solid rgba(240,136,62,0.25);
+            border-radius: 8px;
+            padding: 7px 20px;
+            display: inline-block;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #21262d;
+            padding-top: 8px;
+        }
+        .footer-left, .footer-right {
+            font-size: 9px;
+            color: #484f58;
+            font-family: "SFMono-Regular", Consolas, monospace;
+        }
+        .footer-center {
+            font-size: 11px;
+            color: #8b949e;
+        }
+        .heart { color: #ff7b72; }
+    </style>
+</head>
+<body>
+
+<div class="certificate">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <div class="inner">
+
+        <div>
+            <div class="badge">⬡ Афіцыйны дакумент · 2026</div>
+            <h1>СЕРТЫФІКАТ УЛАДАЛЬНІКА КОДА</h1>
+            <div class="subtitle">Certificate of Code Ownership · Verified by Git History</div>
+        </div>
+
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-icon">◆</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <div>
+            <div class="recipient-label">Узнагароджваецца</div>
+            <div class="recipient-name">Misha</div>
+        </div>
+
+        <div class="text">
+            Гэтым дакументам пацвярджаецца, што <strong style="color:#c9d1d9">поўныя правы</strong>
+            на ўсе камміты, баги і нечаканыя фічы перадаюцца ва ўласнасць
+            вышэйназначанай асобы — бясплатна, без SLA і тэрміну падтрымкі.
+        </div>
+
+        <div class="repo-qr-row">
+            <div class="repo-block">
+                <span class="repo-icon">⎇</span>
+                <span class="repo-url">git clone https://github.com/glebobos/Oracle-For-Misha</span>
+            </div>
+            <div class="qr-wrapper">
+                <img
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=86x86&bgcolor=ffffff&color=000000&data=https%3A%2F%2Fgithub.com%2Fglebobos%2FOracle-For-Misha"
+                    alt="QR"
+                    width="86" height="86"
+                />
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-value">∞</span>
+                <span class="stat-label">Прадказанняў</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">C</span>
+                <span class="stat-label">Мова зносін</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">RP2350</span>
+                <span class="stat-label">Аснова</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">1</span>
+                <span class="stat-label">Аракул на свеце</span>
+            </div>
+        </div>
+
+        <div class="instruction">
+            ⎇ Склануй рэпазіторый альбо адскануй QR — і Аракул адкажа на любое пытанне. &nbsp;⚡ Дастаткова падключыць харчаванне і спытаць.
+        </div>
+
+        <div class="footer">
+            <span class="footer-left">commit: initial-birthday-2026</span>
+            <span class="footer-center">Зроблена з <span class="heart">♥</span> і кодам</span>
+            <span class="footer-right">branch: main · status: ✓ passing</span>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.onload = function() { window.print(); }
+</script>
+</body>
+</html>
