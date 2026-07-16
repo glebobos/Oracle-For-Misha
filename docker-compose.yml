@@ -1,0 +1,9 @@
+services:
+  firmware-builder:
+    image: misha-gadalka-pico
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pico
+    volumes:
+      - ./firmware:/project
+    working_dir: /project

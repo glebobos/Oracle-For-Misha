@@ -1,0 +1,22 @@
+FROM ubuntu:24.04 AS sdk
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG PICO_SDK_VERSION=2.2.0
+ARG PICOTOOL_VERSION=2.2.0
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake gcc-arm-none-eabi git libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib \
+    libusb-1.0-0-dev make picocom pkg-config python3 ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone --depth 1 --recurse-submodules --shallow-submodules --branch ${PICO_SDK_VERSION} \
+    https://github.com/raspberrypi/pico-sdk.git /opt/pico-sdk \
+    && git clone --depth 1 --branch ${PICOTOOL_VERSION} \
+    https://github.com/raspberrypi/picotool.git /tmp/picotool \
+    && cmake -S /tmp/picotool -B /tmp/picotool/build -DPICO_SDK_PATH=/opt/pico-sdk -DPICOTOOL_FLAT_INSTALL=1 \
+    && cmake --build /tmp/picotool/build --target install -j"$(nproc)" \
+    && rm -rf /tmp/picotool
+
+ENV PICO_SDK_PATH=/opt/pico-sdk
+WORKDIR /project
+CMD ["cmake", "-S", ".", "-B", "build", "-DPICO_BOARD=pico2"]
