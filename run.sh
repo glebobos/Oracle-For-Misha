@@ -34,11 +34,23 @@ build() {
 
 flash() {
   build
-  echo "Build complete. Press and hold BOOT on the XIAO RP2350, connect USB, release — then press Enter to flash."
-  read -r
+  TARGET_PORT="${PORT:-}"
+  if [[ -z "$TARGET_PORT" ]]; then
+    TARGET_PORT=$(detect_port 2>/dev/null || true)
+  fi
+
+  if [[ -n "$TARGET_PORT" && -e "$TARGET_PORT" ]]; then
+    echo "Sending 1200 baud pulse to $TARGET_PORT to reboot board into BOOTSEL mode..."
+    stty -F "$TARGET_PORT" 1200 2>/dev/null || true
+    sleep 1.5
+  else
+    echo "No serial port found for 1200 baud reset, attempting direct picotool flash..."
+  fi
+
+  echo "Flashing firmware via picotool..."
   docker run --rm --privileged -v /dev/bus/usb:/dev/bus/usb \
     -v "$(pwd)/firmware:/project" -w /project "$PROJECT_IMAGE" \
-    /usr/local/picotool/picotool load -f "$UF2_PATH"
+    /usr/local/picotool/picotool load -f "$UF2_PATH" -x
 }
 
 monitor() {

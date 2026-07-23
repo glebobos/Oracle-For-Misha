@@ -27,13 +27,13 @@ Only Docker Engine with USB access is required.
 
 The first run creates a Docker image with Pico SDK 2.2.0, ARM GCC, `picotool`, and `picocom`, then writes the UF2 to `firmware/build/misha_gadalka.uf2`.
 
-To flash, run the command first — it builds the firmware, then prompts you to enter BOOTSEL mode:
+To flash, run:
 
 ```bash
 ./run.sh flash
 ```
 
-When the build finishes, press and hold BOOT on the XIAO RP2350, connect USB, release the button, and press Enter. `picotool` flashes the board from inside the container.
+The script automatically sends a 1200 baud reset pulse over USB serial (`/dev/ttyACM0`) to force the board into BOOTSEL mode, flashes the UF2 binary with `picotool -f`, and automatically reboots the board (`-x`). No manual BOOT button press required.
 
 The serial monitor also runs inside the container:
 
